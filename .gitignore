@@ -144,3 +144,4 @@ media/
 templates/
 
 *.sqlite3
+/db.sqlite3
