@@ -43,9 +43,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
+    'django_filters',
     'common',
     'people',
     'people.api',
+    'certifications',
+    'certifications.api',
     'django.contrib.admin',
 ]
 

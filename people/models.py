@@ -21,7 +21,7 @@ class Profile(BaseModel):
     def avatar_tag(self):
         return u'<img src="%s" height=75 width=75 />' % self.avatar.url
 
-    avatar_tag.short_description = _("Текущее фото")
+    avatar_tag.short_description = _("Current image")
     avatar_tag.allow_tags = True
 
     @property

@@ -141,7 +141,6 @@ fabric.properties
 logs/
 db.sqlite3
 media/
-templates/
 
 *.sqlite3
 /db.sqlite3
