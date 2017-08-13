@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'people.api',
     'certifications',
     'certifications.api',
+    'cert_remainder',
+    'cert_remainder.api',
     'django.contrib.admin',
 ]
 
