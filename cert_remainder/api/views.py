@@ -1,5 +1,7 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -20,6 +22,13 @@ class UserCertificationListCreateAPIView(ListCreateAPIView):
     def get_queryset(self):
         queryset = UserCertification.objects.filter(user=self.request.user)
         return queryset
+
+    def create(self, request, *args, **kwargs):
+        context = {'request': request}
+        serializer = UserCertificationSerializer(data=request.data, context=context, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class UserCertificationRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
