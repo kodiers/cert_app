@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import datetime
+
+from .local_settings import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,6 +27,7 @@ SECRET_KEY = 'muiow8!+xft@3nbv1))rze(ro95==t^+ft49_&o-gs@olp#w7r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+DEVELOP = True
 
 ALLOWED_HOSTS = []
 
@@ -31,13 +35,23 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'people.apps.PeopleConfig',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_swagger',
+    'django_filters',
+    'common',
+    'people',
+    'people.api',
+    'certifications',
+    'certifications.api',
+    'cert_remainder',
+    'cert_remainder.api',
+    'django.contrib.admin',
 ]
 
 MIDDLEWARE = [
@@ -75,10 +89,7 @@ WSGI_APPLICATION = 'cert_app.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': default_db
 }
 
 
@@ -104,9 +115,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -120,4 +131,146 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
+MEDIA_ROOT = (
+    os.path.join(BASE_DIR, 'media')
+)
+
+MEDIA_URL = MEDIA_URL
+
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
+
+LANGUAGES = (
+    ('ru', 'Russian'),
+    ('en', 'English'),
+)
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 50,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    )
+}
+
+
+# LOGGING
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        # 'null': {
+        #     'level':'DEBUG',
+        #     'class':'django.utils.log.NullHandler',
+        # },
+        'logfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR + "/logs/logfile",
+            'maxBytes': 50000,
+            'backupCount': 5,
+            'formatter': 'standard',
+            "encoding": "utf8"
+        },
+        'dblog': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR + "/logs/dblog",
+            'maxBytes': 50000,
+            'backupCount': 5,
+            'formatter': 'standard',
+            "encoding": "utf8"
+        },
+        'requestlog': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR + "/logs/requestlog",
+            'maxBytes': 50000,
+            'backupCount': 5,
+            'formatter': 'standard',
+            "encoding": "utf8"
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'logfile'],
+            'propagate': True,
+            'level': 'WARN',
+        },
+        'django.db.backends': {
+            'handlers': ['console', 'dblog'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console', 'requestlog'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django.server': {
+            'handlers': ['console', 'requestlog'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'main': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+        },
+        'accounts': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+        },
+        'common': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+        },
+        'lessons': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+        },
+        'people': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+        },
+        'tasks': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+        },
+        'celery.task': {
+            'handlers': ['logfile'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'celery': {
+            'handlers': ['logfile'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }
+}
+
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=30),
+    'JWT_AUTH_HEADER_PREFIX': 'Token',
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=30),
+}
+
+SWAGGER_SETTINGS = {
+    "is_authenticated": True,
+    "is_superuser": True
+}

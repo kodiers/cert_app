@@ -138,3 +138,9 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 .idea/
+logs/
+db.sqlite3
+media/
+
+*.sqlite3
+/db.sqlite3
