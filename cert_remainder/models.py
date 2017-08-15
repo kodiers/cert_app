@@ -26,6 +26,7 @@ class UserCertification(BaseModel):
         verbose_name = _("User's certification")
         verbose_name_plural = _("User's certifications")
         ordering = ("created",)
+        unique_together = ('user', 'certification')
 
 
 class UserExam(BaseModel):
@@ -51,3 +52,4 @@ class UserExam(BaseModel):
         verbose_name = _("User's exam")
         verbose_name_plural = _("User's exams")
         ordering = ("created",)
+        unique_together = ('user', 'exam', 'user_certification')
