@@ -31,3 +31,16 @@ class UserRegistrationAPIView(GenericAPIView):
         profile = Profile.objects.get(user=user)
         profile_serializer = ProfileSerializer(profile)
         return Response(profile_serializer.data, status=status.HTTP_201_CREATED)
+
+
+class GetUserInfoAPIView(GenericAPIView):
+    """
+    Get info about authenticated user
+    """
+    serializer_class = ProfileSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        profile = Profile.objects.get(user=request.user)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data, status=status.HTTP_200_OK)
