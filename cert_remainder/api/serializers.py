@@ -76,3 +76,22 @@ class UserExamSerializer(serializers.ModelSerializer, IdFieldMixin):
     class Meta:
         model = UserExam
         fields = '__all__'
+
+
+class BulkUserExamSerializer(serializers.Serializer):
+    """
+    Serializer for bulk create user exams
+    """
+    exams = serializers.ListField(child=UserExamSerializer(), min_length=1, max_length=20)
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        exams_data_list = validated_data.get('exams')
+        created_exams = list()
+        for exam_data in exams_data_list:
+            instance = UserExam(user=user, user_certification=exam_data['user_certification_id'],
+                                exam=exam_data['exam_id'], date_of_pass=exam_data['date_of_pass'],
+                                remind_at_date=exam_data['remind_at_date'])
+            instance.save()
+            created_exams.append(instance)
+        return {'exams': created_exams}
