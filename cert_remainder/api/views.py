@@ -42,7 +42,7 @@ class UserExamListCreateAPIView(ListCreateAPIView, CreateMixin):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserExamSerializer
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('user_certification__certification', 'date_of_pass', 'remind_at_date')
+    filter_fields = ('user_certification', 'user_certification__certification', 'date_of_pass', 'remind_at_date')
 
     def get_queryset(self):
         queryset = UserExam.objects.filter(user=self.request.user)
