@@ -95,3 +95,15 @@ class BulkUserExamSerializer(serializers.Serializer):
             instance.save()
             created_exams.append(instance)
         return {'exams': created_exams}
+
+    def update(self, instance, validated_data):
+        exams_data_list = validated_data.get('exams')
+        for exam_data in exams_data_list:
+            for inst in instance:
+                if inst.pk == exam_data['id']:
+                    inst.user_certification = exam_data['user_certification_id']
+                    inst.exam = exam_data['exam_id']
+                    inst.date_of_pass = exam_data['date_of_pass']
+                    inst.remind_at_date = exam_data['remind_at_date']
+                    inst.save()
+        return {'exams': instance}
