@@ -27,9 +27,9 @@ SECRET_KEY = 'muiow8!+xft@3nbv1))rze(ro95==t^+ft49_&o-gs@olp#w7r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-DEVELOP = True
+DEVELOP = develop
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = allowed_hosts
 
 
 # Application definition
@@ -135,8 +135,9 @@ MEDIA_ROOT = (
     os.path.join(BASE_DIR, 'media')
 )
 
-MEDIA_URL = MEDIA_URL
+MEDIA_URL = media_url
 
+STATIC_ROOT = static_root
 
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
