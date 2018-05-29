@@ -38,7 +38,8 @@ class Certification(BaseModel):
     number = models.CharField(max_length=20, verbose_name=_("Certification number"), null=True, blank=True)
     image = models.ImageField(upload_to='certifications', null=True, blank=True, verbose_name=_('Certification image'))
     description = models.TextField(null=True, blank=True, verbose_name=_('Description'))
-    vendor = models.ForeignKey(Vendor, related_name='certifications', verbose_name=_("Vendor"))
+    vendor = models.ForeignKey(Vendor, related_name='certifications', verbose_name=_("Vendor"),
+                               on_delete=models.CASCADE)
     deprecated = models.BooleanField(default=False, verbose_name=_("Deprecated"))
 
     def image_tag(self):
@@ -63,7 +64,8 @@ class Exam(BaseModel):
     title = models.CharField(max_length=255, verbose_name=_("Title"), unique=True)
     number = models.CharField(max_length=20, verbose_name=_("Exam number"), null=True, blank=True)
     description = models.TextField(null=True, blank=True, verbose_name=_('Description'))
-    certification = models.ForeignKey(Certification, related_name='exams', verbose_name=_("Certification"))
+    certification = models.ForeignKey(Certification, related_name='exams', verbose_name=_("Certification"),
+                                      on_delete=models.CASCADE)
     deprecated = models.BooleanField(default=False, verbose_name=_("Deprecated"))
 
     def __str__(self):

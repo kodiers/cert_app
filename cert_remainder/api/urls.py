@@ -10,6 +10,8 @@ from .views import (
 )
 
 
+app_name = 'cert_remainder_api'
+
 urlpatterns = (
     url(r'^certification/$', UserCertificationListCreateAPIView.as_view(), name='user_certifications'),
     url(r'^certification/(?P<pk>\d+)/$', UserCertificationRetrieveUpdateDestroyAPIView.as_view(),

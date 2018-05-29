@@ -4,6 +4,8 @@ from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh
 from .views import UserRegistrationAPIView, GetUserInfoAPIView
 
 
+app_name = 'people_api'
+
 urlpatterns = (
     url(r'^api-token-auth/', obtain_jwt_token),
     url(r'^api-token-verify/', verify_jwt_token),

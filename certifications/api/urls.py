@@ -10,6 +10,8 @@ from .views import (
 )
 
 
+app_name = 'certifications_api'
+
 urlpatterns = (
     url(r'^vendor/$', VendorListAPIView.as_view(), name='vendors'),
     url(r'^vendor/(?P<pk>\d+)/$', VendorRetrieveAPIView.as_view(), name='vendor'),

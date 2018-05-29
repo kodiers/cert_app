@@ -274,3 +274,10 @@ SWAGGER_SETTINGS = {
     "is_authenticated": True,
     "is_superuser": True
 }
+
+CORS_ORIGIN_WHITELIST = (
+    'localhost:8000',
+    '127.0.0.1:8000',
+    'localhost:4200',
+    '127.0.0.1:4200'
+)

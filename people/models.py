@@ -12,7 +12,7 @@ class Profile(BaseModel):
     """
     User profile model
     """
-    user = models.OneToOneField(User, related_name='profile', verbose_name=_('Profile'))
+    user = models.OneToOneField(User, related_name='profile', verbose_name=_('Profile'), on_delete=models.CASCADE)
     country = models.CharField(max_length=5, choices=COUNTRIES, default='RU', verbose_name=_('Country'))
     date_of_birth = models.DateField(null=True, blank=True, verbose_name=_('Date of birth'))
     description = models.TextField(null=True, blank=True, verbose_name=_('Description'))
