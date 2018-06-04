@@ -13,21 +13,24 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.conf.urls import include
+from django.urls import path
 from django.contrib import admin
 from django.conf.urls.static import static
-from .settings import MEDIA_URL, MEDIA_ROOT, DEVELOP
+from django.views.generic.base import TemplateView
 
 from rest_framework_swagger.views import get_swagger_view
 
-from .api_urls import urlpatterns as api_urls
+from .settings import MEDIA_URL, MEDIA_ROOT, DEVELOP
+
 
 api_views = get_swagger_view('CertApp system API')
 
 urlpatterns = [
-    url(r'^api/', include('cert_app.api_urls', namespace='api')),
-    url(r'^api-docs/', api_views),
-    url(r'^admin/', admin.site.urls),
+    path('', TemplateView.as_view(template_name='comming_soon.html'), name='index'),
+    path('api/', include('cert_app.api_urls', namespace='api')),
+    path('api-docs/', api_views),
+    path('admin/', admin.site.urls),
 ]
 
 if DEVELOP:
