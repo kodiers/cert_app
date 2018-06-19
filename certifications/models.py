@@ -64,8 +64,7 @@ class Exam(BaseModel):
     title = models.CharField(max_length=255, verbose_name=_("Title"), unique=True)
     number = models.CharField(max_length=20, verbose_name=_("Exam number"), null=True, blank=True)
     description = models.TextField(null=True, blank=True, verbose_name=_('Description'))
-    certification = models.ForeignKey(Certification, related_name='exams', verbose_name=_("Certification"),
-                                      on_delete=models.CASCADE)
+    certification = models.ManyToManyField(Certification, related_name='exams', verbose_name=_("Certification"))
     deprecated = models.BooleanField(default=False, verbose_name=_("Deprecated"))
 
     def __str__(self):
