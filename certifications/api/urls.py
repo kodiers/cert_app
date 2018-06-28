@@ -6,7 +6,8 @@ from .views import (
     CertificationListCreateAPIView,
     CertificationRetrieveAPIView,
     ExamListCreateAPIView,
-    ExamRetrieveAPIView
+    ExamRetrieveAPIView,
+    AddCertificationToExamUpdateAPIView
 )
 
 
@@ -18,5 +19,6 @@ urlpatterns = (
     url(r'^certification/$', CertificationListCreateAPIView.as_view(), name='certifications'),
     url(r'^certification/(?P<pk>\d+)/$', CertificationRetrieveAPIView.as_view(), name='certification'),
     url(r'^exam/$', ExamListCreateAPIView.as_view(), name='exams'),
-    url(r'^exam/(?P<pk>\d+)/$', ExamRetrieveAPIView.as_view(), name='exam')
+    url(r'^exam/(?P<pk>\d+)/$', ExamRetrieveAPIView.as_view(), name='exam'),
+    url(r'^exam/add/(?P<pk>\d+)/$', AddCertificationToExamUpdateAPIView.as_view(), name='add_cert_to_exam')
 )
