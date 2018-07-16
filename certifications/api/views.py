@@ -57,7 +57,7 @@ class ExamListCreateAPIView(ListCreateAPIView):
     Exam list create api view
     """
     permission_classes = (IsAuthenticated,)
-    queryset = Exam.objects.all()
+    queryset = Exam.objects.all().distinct()
     serializer_class = ExamSerializer
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('certification', 'certification__vendor')
