@@ -78,7 +78,7 @@ class AddCertificationToExamUpdateAPIView(UpdateAPIView):
     """
     permission_classes = (IsAuthenticated,)
     queryset = Exam.objects.all()
-    http_method_names = ['put']
+    http_method_names = ['patch']
     serializer_class = AddCertificationToExamSerializer
 
     def update(self, request, *args, **kwargs):
