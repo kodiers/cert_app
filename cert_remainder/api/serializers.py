@@ -84,6 +84,17 @@ class BulkUserExamSerializer(serializers.Serializer):
     """
     exams = serializers.ListField(child=UserExamSerializer(), min_length=1, max_length=20)
 
+    def validate(self, attrs):
+        validated_data = super(BulkUserExamSerializer, self).validate(attrs)
+        exams_data_list = validated_data.get('exams')
+        for exam_data in exams_data_list:
+            exam = Exam.objects.get(pk=exam_data['exam_id'])
+            certification = UserCertification.objects.get(pk=exam_data['user_certification_id']).certification
+            if exam not in certification.exams.all():
+                raise serializers.ValidationError('Exam {} is not part of certification {}'.format(exam.pk,
+                                                                                                   certification.pk))
+        return validated_data
+
     def create(self, validated_data):
         user = self.context['request'].user
         exams_data_list = validated_data.get('exams')
