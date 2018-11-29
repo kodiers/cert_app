@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'muiow8!+xft@3nbv1))rze(ro95==t^+ft49_&o-gs@olp#w7r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = debug
 DEVELOP = develop
 
 ALLOWED_HOSTS = allowed_hosts
@@ -278,10 +278,4 @@ SWAGGER_SETTINGS = {
     "is_superuser": True
 }
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:8000',
-    '127.0.0.1:8000',
-    'localhost:4200',
-    '127.0.0.1:4200',
-    '95.31.222.138'
-)
+CORS_ORIGIN_WHITELIST = cors_list
