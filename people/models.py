@@ -25,12 +25,12 @@ class Profile(BaseModel):
     avatar_tag.allow_tags = True
 
     @property
-    def full_name(self):
+    def full_name(self) -> str:
         if self.user.first_name and self.user.last_name:
             return "{fn} {ln}".format(fn=self.user.first_name, ln=self.user.last_name)
         return self.user.username
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.full_name
 
     class Meta:
