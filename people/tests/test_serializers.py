@@ -61,7 +61,7 @@ class TestUserSerializer(TestCase):
 
 class TestProfileSerializer(TestCase):
     """
-
+    Simple test for ProfileSerializer
     """
     @classmethod
     def setUpTestData(cls):
