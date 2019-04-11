@@ -9,7 +9,7 @@ from people.tests.recipes import user_recipe
 
 class TestUserRegistrationSerializer(TestCase):
     """
-
+    Test UserRegistrationSerializer
     """
     @classmethod
     def setUpTestData(cls):
