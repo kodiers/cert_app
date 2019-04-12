@@ -22,8 +22,6 @@ from django.conf import settings
 
 from rest_framework_swagger.views import get_swagger_view
 
-# from settings.development import MEDIA_URL, MEDIA_ROOT, DEVELOP
-
 
 api_views = get_swagger_view('CertApp system API')
 
