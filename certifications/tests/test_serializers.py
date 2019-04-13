@@ -56,7 +56,7 @@ class TestAddCertificationToExamSerializer(TestCase):
     """
     Test AddCertificationToExamSerializer
     """
-    def test_updata(self):
+    def test_update(self):
         exam = exam_recipe.make()
         certification = certification_recipe.make()
         serializer = AddCertificationToExamSerializer()

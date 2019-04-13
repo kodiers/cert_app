@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-class CreateMixin():
+class CreateMixin:
     def create(self, request, *args, **kwargs):
         context = {'request': request}
         serializer = self.serializer_class(data=request.data, context=context, partial=True)

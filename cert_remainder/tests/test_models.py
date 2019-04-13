@@ -1,11 +1,15 @@
 from django.test import TestCase
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+
+from model_mommy import mommy
 
 from people.tests.recipes import user_recipe
+from certifications.models import Exam
 from certifications.tests.recipes import exam_with_certification
 
 from cert_remainder.models import UserCertification, UserExam
-from cert_remainder.tests.recipes import user_certification_recipe, user_exam_recipe
+from cert_remainder.tests.recipes import user_certification_recipe
 
 
 class TestUserCertification(TestCase):
@@ -36,3 +40,9 @@ class TestUserExam(TestCase):
 
     def test_str(self):
         self.assertEqual(str(self.user_exam), "{} {}".format(self.user_exam.user.username, self.user_exam.exam.title))
+
+    def test_save(self):
+        exam = mommy.make(Exam)
+        self.user_exam.exam = exam
+        with self.assertRaisesMessage(ValidationError, "Exam is not part of selected certification"):
+            self.user_exam.save()
