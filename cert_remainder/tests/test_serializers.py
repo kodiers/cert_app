@@ -1,4 +1,3 @@
-from unittest.mock import Mock
 from datetime import timedelta
 
 from django.test import TestCase
@@ -7,11 +6,12 @@ from django.utils import timezone
 from model_mommy import mommy
 
 from people.tests.recipes import user_recipe
-from certifications.models import Certification
-from certifications.tests.recipes import certification_recipe
+from certifications.models import Certification, Vendor
+from certifications.tests.recipes import certification_recipe, exam_with_certification, exam_recipe
 
-from cert_remainder.api.serializers import UserCertificationSerializer
-from cert_remainder.tests.recipes import user_certification_recipe
+from cert_remainder.api.serializers import UserCertificationSerializer, UserExamSerializer, BulkUserExamSerializer
+from cert_remainder.tests.recipes import user_certification_recipe, user_exam_recipe
+from cert_remainder.tests.mocks import create_mock_request
 
 
 class TestUserCertificationSerializer(TestCase):
@@ -23,9 +23,7 @@ class TestUserCertificationSerializer(TestCase):
         cls.now = timezone.now()
         cls.user = user_recipe.make()
         cls.serializer = UserCertificationSerializer()
-        mock_request = Mock()
-        mock_request.user = cls.user
-        cls.serializer.context['request'] = mock_request
+        cls.serializer.context['request'] = create_mock_request(cls.user)
 
     def test_create(self):
         certification = certification_recipe.make()
@@ -46,3 +44,79 @@ class TestUserCertificationSerializer(TestCase):
         self.assertEqual(user_certification.certification, new_certification)
         self.assertEqual(user_certification.expiration_date, now_plus_hour.date())
 
+
+class TestUserExamSerializer(TestCase):
+    """
+    Test UserExamSerializer
+    """
+    @classmethod
+    def setUpTestData(cls):
+        cls.now = timezone.now()
+        cls.user = user_recipe.make()
+        cls.serializer = UserExamSerializer()
+        cls.serializer.context['request'] = create_mock_request(cls.user)
+        cls.exam = exam_with_certification.make()
+        cls.user_certification = user_certification_recipe.make(user=cls.user,
+                                                                certification=cls.exam.certification.all()[0])
+
+    def test_create(self):
+        data = {'user_certification_id': self.user_certification, 'exam_id': self.exam, 'date_of_pass': self.now,
+                'remind_at_date': None}
+        user_exam = self.serializer.create(data)
+        self.assertEqual(user_exam.user, self.user)
+        self.assertEqual(user_exam.user_certification_id, self.user_certification.pk)
+        self.assertEqual(user_exam.exam_id, self.exam.pk)
+        self.assertEqual(user_exam.date_of_pass, self.now)
+        self.assertIsNone(user_exam.remind_at_date)
+
+    def test_update(self):
+        user_exam = user_exam_recipe.make(user=self.user,
+                                          user_certification=self.user_certification, exam=self.exam)
+        new_certification = certification_recipe.make(title='Test-1', number='test-1', vendor=Vendor.objects.all()[0])
+        new_user_certification = user_certification_recipe.make(user=self.user, certification=new_certification)
+        new_exam = exam_recipe.make(title='Test-1', number='test-1')
+        new_exam.certification.add(new_certification)
+        data = {'user_certification_id': new_user_certification, 'exam_id': new_exam, 'date_of_pass': self.now,
+                'remind_at_date': self.now}
+        updated_exam = self.serializer.update(user_exam, data)
+        self.assertEqual(updated_exam.user, self.user)
+        self.assertEqual(updated_exam.user_certification_id, new_user_certification.pk)
+        self.assertEqual(updated_exam.exam_id, new_exam.pk)
+        self.assertEqual(updated_exam.date_of_pass, self.now)
+        self.assertEqual(updated_exam.remind_at_date, self.now)
+
+
+class TestBulkUserExamSerializer(TestCase):
+    """
+    Test BulkUserExamSerializer
+    """
+    @classmethod
+    def setUpTestData(cls):
+        cls.exam_1 = exam_with_certification.make()
+        cls.exam_2 = exam_recipe.make(title='Test-1', number='test-1')
+        cls.exam_2.certification.add(cls.exam_1.certification.all()[0])
+        cls.now = timezone.now()
+        cls.user = user_recipe.make()
+        cls.serializer = BulkUserExamSerializer()
+        cls.serializer.context['request'] = create_mock_request(cls.user)
+        cls.user_certification = user_certification_recipe.make(user=cls.user,
+                                                                certification=cls.exam_1.certification.all()[0])
+        cls.user_exam_1 = user_exam_recipe.make(user=cls.user, user_certification=cls.user_certification,
+                                                exam=cls.exam_1)
+        cls.user_exam_2 = user_exam_recipe.make(user=cls.user, user_certification=cls.user_certification,
+                                                exam=cls.exam_2)
+
+    def test_validate_correct(self):
+        data = {'exams': [{'exam_id': self.exam_1, 'user_certification_id': self.user_certification},
+                          {'exam_id': self.exam_2, 'user_certification_id': self.user_certification}]}
+        validated_data = self.serializer.validate(data)
+        self.assertEqual(data, validated_data)
+
+    def test_validate_incorrect(self):
+        """
+        Hint:
+        with self.assertRaisesMessage(ValidationError, "Password are required"):
+            self.serializer.validate_password('')
+        """
+        # TODO: implement test
+        pass
