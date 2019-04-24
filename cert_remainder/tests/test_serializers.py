@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from model_mommy import mommy
+from rest_framework.exceptions import ValidationError
 
 from people.tests.recipes import user_recipe
 from certifications.models import Certification, Vendor
@@ -101,10 +102,6 @@ class TestBulkUserExamSerializer(TestCase):
         cls.serializer.context['request'] = create_mock_request(cls.user)
         cls.user_certification = user_certification_recipe.make(user=cls.user,
                                                                 certification=cls.exam_1.certification.all()[0])
-        cls.user_exam_1 = user_exam_recipe.make(user=cls.user, user_certification=cls.user_certification,
-                                                exam=cls.exam_1)
-        cls.user_exam_2 = user_exam_recipe.make(user=cls.user, user_certification=cls.user_certification,
-                                                exam=cls.exam_2)
 
     def test_validate_correct(self):
         data = {'exams': [{'exam_id': self.exam_1, 'user_certification_id': self.user_certification},
@@ -113,10 +110,36 @@ class TestBulkUserExamSerializer(TestCase):
         self.assertEqual(data, validated_data)
 
     def test_validate_incorrect(self):
-        """
-        Hint:
-        with self.assertRaisesMessage(ValidationError, "Password are required"):
-            self.serializer.validate_password('')
-        """
-        # TODO: implement test
-        pass
+        exam = exam_recipe.make(title='Test-2', number='test-2')
+        data = {'exams': [{'exam_id': exam, 'user_certification_id': self.user_certification}]}
+        with self.assertRaisesMessage(ValidationError, 'Exam {} is not part of certification {}'.format(
+                exam.pk, self.exam_1.certification.all()[0].pk)):
+            self.serializer.validate(data)
+
+    def test_create(self):
+        data = {'exams': [{'exam_id': self.exam_1, 'user_certification_id': self.user_certification,
+                           'date_of_pass': self.now, 'remind_at_date': None},
+                          {'exam_id': self.exam_2, 'user_certification_id': self.user_certification,
+                           'date_of_pass': self.now, 'remind_at_date': None}]}
+        exams_dict = self.serializer.create(data)
+        self.assertEqual(len(exams_dict['exams']), 2)
+        for user_exam in exams_dict['exams']:
+            self.assertEqual(user_exam.user, self.user)
+            self.assertEqual(user_exam.user_certification_id, self.user_certification.pk)
+            self.assertIn(user_exam.exam_id, [self.exam_1.pk, self.exam_2.pk])
+            self.assertEqual(user_exam.date_of_pass, self.now)
+            self.assertIsNone(user_exam.remind_at_date)
+
+    def test_update(self):
+        user_exam_1 = user_exam_recipe.make(user=self.user, user_certification=self.user_certification,
+                                            exam=self.exam_1)
+        data = {'exams': [{'id': user_exam_1.pk, 'exam_id': self.exam_2,
+                           'user_certification_id': self.user_certification, 'date_of_pass': self.now,
+                           'remind_at_date': self.now}]}
+        updated_user_exams = self.serializer.update([user_exam_1], data)
+        for user_exam in updated_user_exams['exams']:
+            self.assertEqual(user_exam.user, self.user)
+            self.assertEqual(user_exam.user_certification_id, self.user_certification.pk)
+            self.assertEqual(user_exam.exam_id, self.exam_2.pk)
+            self.assertEqual(user_exam.date_of_pass, self.now)
+            self.assertEqual(user_exam.remind_at_date, self.now)
