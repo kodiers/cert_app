@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import mark_safe
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
@@ -19,18 +20,18 @@ class Profile(BaseModel):
     avatar = models.ImageField(upload_to='users', null=True, blank=True, verbose_name=_('Profile image'))
 
     def avatar_tag(self):
-        return u'<img src="%s" height=75 width=75 />' % self.avatar.url
+        return mark_safe('<img src="{}" height=75 width=75 />'.format(self.avatar.url))
 
     avatar_tag.short_description = _("Current image")
     avatar_tag.allow_tags = True
 
     @property
-    def full_name(self):
+    def full_name(self) -> str:
         if self.user.first_name and self.user.last_name:
             return "{fn} {ln}".format(fn=self.user.first_name, ln=self.user.last_name)
         return self.user.username
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.full_name
 
     class Meta:

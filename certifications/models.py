@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from common.models import BaseModel
 
 # Create your models here.
+# TODO: move common fields/methods to abstract model
 
 
 class Vendor(BaseModel):
