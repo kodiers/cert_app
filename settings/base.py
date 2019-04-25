@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 import datetime
 
-from .local_settings import *
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -26,10 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'muiow8!+xft@3nbv1))rze(ro95==t^+ft49_&o-gs@olp#w7r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = debug
-DEVELOP = develop
+DEBUG = True
+DEVELOP = True
 
-ALLOWED_HOSTS = allowed_hosts
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -47,7 +45,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'common',
     'people',
-    'people.api',
     'certifications',
     'certifications.api',
     'cert_remainder',
@@ -91,7 +88,10 @@ WSGI_APPLICATION = 'cert_app.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': default_db
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 
 
@@ -137,9 +137,6 @@ MEDIA_ROOT = (
     os.path.join(BASE_DIR, 'media')
 )
 
-MEDIA_URL = media_url
-
-STATIC_ROOT = static_root
 
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
@@ -277,5 +274,3 @@ SWAGGER_SETTINGS = {
     "is_authenticated": True,
     "is_superuser": True
 }
-
-CORS_ORIGIN_WHITELIST = cors_list

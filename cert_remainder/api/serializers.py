@@ -1,7 +1,8 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from common.serializers import IdFieldMixin
-from people.api.serializers import UserSerializer
+from people.serializers import UserSerializer
 from certifications.api.serializers import CertificationSerializer, ExamSerializer
 from certifications.models import Certification, Exam
 from cert_remainder.models import UserCertification, UserExam
@@ -91,8 +92,7 @@ class BulkUserExamSerializer(serializers.Serializer):
             exam = exam_data['exam_id']
             certification = exam_data['user_certification_id'].certification
             if exam not in certification.exams.all():
-                raise serializers.ValidationError('Exam {} is not part of certification {}'.format(exam.pk,
-                                                                                                   certification.pk))
+                raise ValidationError('Exam {} is not part of certification {}'.format(exam.pk, certification.pk))
         return validated_data
 
     def create(self, validated_data):
