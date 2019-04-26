@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from rest_framework.serializers import ValidationError
 
-from people.serializers import UserRegistrationSerializer, UserSerializer, ProfileSerializer
+from people.api.serializers import UserRegistrationSerializer, UserSerializer, ProfileSerializer
 
 from people.tests.recipes import user_recipe
 
