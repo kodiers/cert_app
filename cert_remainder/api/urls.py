@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 
 from .views import (
     UserCertificationListCreateAPIView,
@@ -13,11 +13,10 @@ from .views import (
 app_name = 'cert_remainder_api'
 
 urlpatterns = (
-    url(r'^certification/$', UserCertificationListCreateAPIView.as_view(), name='user_certifications'),
-    url(r'^certification/(?P<pk>\d+)/$', UserCertificationRetrieveUpdateDestroyAPIView.as_view(),
-        name='user_certification'),
-    url(r'^exam/$', UserExamListCreateAPIView.as_view(), name='user_exams'),
-    url(r'^exam/(?P<pk>\d+)/$', UserExamRetrieveUpdateDestroyAPIView.as_view(), name='user_exam'),
-    url(r'^exam/bulk/create/$', BulkUserExamCreateAPIView.as_view(), name='bulk_create_user_exams'),
-    url(r'^exam/bulk/update/$', BulkUserExamUpdateAPIView.as_view(), name='bulk_update_user_exams')
+    path('certification/', UserCertificationListCreateAPIView.as_view(), name='user_certifications'),
+    path('certification/<int:pk>/', UserCertificationRetrieveUpdateDestroyAPIView.as_view(), name='user_certification'),
+    path('exam/', UserExamListCreateAPIView.as_view(), name='user_exams'),
+    path('exam/<int:pk>/', UserExamRetrieveUpdateDestroyAPIView.as_view(), name='user_exam'),
+    path('exam/bulk/create/', BulkUserExamCreateAPIView.as_view(), name='bulk_create_user_exams'),
+    path('exam/bulk/update/', BulkUserExamUpdateAPIView.as_view(), name='bulk_update_user_exams')
 )
