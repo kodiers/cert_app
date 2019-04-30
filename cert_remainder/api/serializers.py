@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from common.serializers import IdFieldMixin
-from people.serializers import UserSerializer
+from people.api.serializers import UserSerializer
 from certifications.api.serializers import CertificationSerializer, ExamSerializer
 from certifications.models import Certification, Exam
 from cert_remainder.models import UserCertification, UserExam

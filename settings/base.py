@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'common',
     'people',
+    'people.api',
     'certifications',
     'certifications.api',
     'cert_remainder',
