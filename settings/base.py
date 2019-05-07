@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'common',
     'people',
     'people.api',
+    'people.api_v2',
     'certifications',
     'certifications.api',
     'cert_remainder',
