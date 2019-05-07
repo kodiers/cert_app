@@ -3,6 +3,7 @@ from django.test import TestCase
 from rest_framework.serializers import ValidationError
 
 from people.api.serializers import UserRegistrationSerializer, UserSerializer, ProfileSerializer
+from people.api_v2.serializers import UserRegistrationSerializerV2
 
 from people.tests.recipes import user_recipe
 
@@ -82,3 +83,46 @@ class TestProfileSerializer(TestCase):
 
     def test_get_token(self):
         self.assertIsNotNone(self.serializer.get_token(self.user.profile))
+
+
+class TestUserRegistrationSerializerV2(TestCase):
+    """
+    Test UserRegistrationSerializer
+    """
+    @classmethod
+    def setUpTestData(cls):
+        cls.password = 'p@ssw0rdp@ssw0rd'
+        cls.username = 'test'
+        cls.email = 'test@test.com'
+        cls.serializer = UserRegistrationSerializerV2()
+
+    def test_validate_success(self):
+        data = {'password': self.password, 'confirm_password': self.password, 'email': self.email}
+        validated_data = self.serializer.validate(data)
+        self.assertEqual(validated_data, data)
+
+    def test_validate_fail(self):
+        data = {'password': self.password, 'confirm_password': 'password', 'email': self.email}
+        with self.assertRaisesMessage(ValidationError, "Password and confirm password don't match"):
+            self.serializer.validate(data)
+
+    def test_validate_password_success(self):
+        password = self.serializer.validate_password(self.password)
+        self.assertEqual(password, self.password)
+
+    def test_validate_password_empty(self):
+        with self.assertRaisesMessage(ValidationError, "Password are required"):
+            self.serializer.validate_password('')
+
+    def test_validate_password_simple(self):
+        self.assertRaises(ValidationError, self.serializer.validate_password, 'password')
+
+    def test_validate_email_fail(self):
+        data = {'email': self.password}
+        with self.assertRaisesMessage(ValidationError, "Enter a valid email address."):
+            self.serializer.validate_email(data)
+
+    def test_create(self):
+        data = {"username": self.username, "password": self.password, 'email': self.email}
+        user = self.serializer.create(data)
+        self.assertEqual(user.username, self.username)

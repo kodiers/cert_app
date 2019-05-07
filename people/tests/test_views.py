@@ -46,3 +46,20 @@ class TestGetUserInfoAPIView(TestCase):
         self.assertTrue(response.data["user"]["last_name"], self.user.last_name)
         self.assertTrue(response.data["country"], self.user.profile.country)
         self.assertIsNotNone(response.data["token"])
+
+
+class TestUserRegistrationAPIViewV2(TestCase):
+    """
+    Test UserRegistrationAPIViewV2
+    """
+    def test_post(self):
+        username = "test"
+        password = "p@ssw0rd11"
+        email = 'test@test.com'
+        data = {"username": username, 'password': password, 'confirm_password': password, "email": email}
+        response = self.client.post(reverse('api:api_v2:people_api_v2:registration'), data,
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(response.data["user"]["username"], username)
+        self.assertTrue(response.data["user"]["email"], email)
+        self.assertIsNotNone(response.data["token"])
