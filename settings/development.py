@@ -1,5 +1,5 @@
 from settings.base import *
-from settings.local import default_db
+from settings.local import default_db, celery_broker_url, celery_result_backend
 
 
 DEBUG = True
@@ -22,3 +22,6 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:4200',
     '127.0.0.1:4200',
 )
+
+CELERY_BROKER_URL = celery_broker_url
+CELERY_RESULT_BACKEND = celery_result_backend
