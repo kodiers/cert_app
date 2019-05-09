@@ -292,7 +292,7 @@ CELERY_ROUTES = {
     # -- HIGH PRIORITY QUEUE -- #
     # 'tasks.tasks.generate_cards': {'queue': 'high'},
     # -- NORMAL PRIORITY QUEUE
-    # 'common.tasks.delete_file': {'queue': 'normal'},
+    'people.tasks.send_registration_confirmation': {'queue': 'normal'},
     # 'tasks.tasks.parse_file': {'queue': 'normal'},
     # 'tasks.tasks.clean_exercises': {'queue': 'normal'},
     # -- LOW PRIORITY QUEUE -- #
