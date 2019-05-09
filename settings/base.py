@@ -229,19 +229,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'main': {
-            'handlers': ['console', 'logfile'],
-            'level': 'DEBUG',
-        },
-        'accounts': {
-            'handlers': ['console', 'logfile'],
-            'level': 'DEBUG',
-        },
         'common': {
             'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
         },
-        'lessons': {
+        'certifications': {
             'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
         },
@@ -249,7 +241,7 @@ LOGGING = {
             'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
         },
-        'tasks': {
+        'cert_remainder': {
             'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
         },
@@ -308,3 +300,6 @@ CELERY_ROUTES = {
     # 'tasks.add_attributes_to_exercises': {'queue': 'low'},
     # 'tasks.change_card_status': {'queue': 'low'},
 }
+
+# Custom app settings
+PROJECT_EMAIL_TEMPLATE_NAME = 'Re:Minder'
