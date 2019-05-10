@@ -15,6 +15,7 @@ def send_registration_confirmation(username: str, email: str):
     Send registration confirmation email
     """
     logger.info("Sending email to: {}".format(email))
-    email = Email({'username': username, 'email': email}, 'email/registration_confirmation.html',
+    email = Email({'username': username, 'email': email, 'app_name': settings.PROJECT_EMAIL_TEMPLATE_NAME},
+                  'email/registration_confirmation.html',
                   'You was successfully registered in {}'.format(settings.PROJECT_EMAIL_TEMPLATE_NAME), [email])
     email.send()
