@@ -32,6 +32,6 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 
 # EMAIL BACKEND
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 EMAIL_HOST_USER = 'test@test.ru'
 FAIL_EMAIL_SILENTLY = False
