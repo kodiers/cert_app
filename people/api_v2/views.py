@@ -8,6 +8,7 @@ from rest_framework.request import Request
 from rest_framework.parsers import JSONParser
 
 from people.models import Profile
+from people.tasks import send_registration_confirmation
 from people.api.serializers import ProfileSerializer
 
 from .serializers import UserRegistrationSerializerV2
@@ -28,4 +29,5 @@ class UserRegistrationAPIViewV2(GenericAPIView):
         user = serializer.save()
         profile = Profile.objects.get(user=user)
         profile_serializer = ProfileSerializer(profile)
+        send_registration_confirmation.delay(user.username, user.email)
         return Response(profile_serializer.data, status=status.HTTP_201_CREATED)

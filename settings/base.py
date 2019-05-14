@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import datetime
+from kombu import Queue, Exchange
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -228,19 +229,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'main': {
-            'handlers': ['console', 'logfile'],
-            'level': 'DEBUG',
-        },
-        'accounts': {
-            'handlers': ['console', 'logfile'],
-            'level': 'DEBUG',
-        },
         'common': {
             'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
         },
-        'lessons': {
+        'certifications': {
             'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
         },
@@ -248,17 +241,17 @@ LOGGING = {
             'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
         },
-        'tasks': {
+        'cert_remainder': {
             'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
         },
         'celery.task': {
-            'handlers': ['logfile'],
+            'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'celery': {
-            'handlers': ['logfile'],
+            'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
             'propagate': True,
         },
@@ -276,3 +269,37 @@ SWAGGER_SETTINGS = {
     "is_authenticated": True,
     "is_superuser": True
 }
+
+# Celery settings
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERYD_HIJACK_ROOT_LOGGER = False
+
+CELERY_QUEUES = (
+    Queue('high', Exchange('high'), routing_key='high'),
+    Queue('normal', Exchange('normal'), routing_key='normal'),
+    Queue('low', Exchange('low'), routing_key='low'),
+)
+
+CELERY_DEFAULT_QUEUE = 'normal'
+CELERY_DEFAULT_EXCHANGE = 'normal'
+CELERY_DEFAULT_ROUTING_KEY = 'normal'
+
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_TASK_ROUTES = {
+#     # -- HIGH PRIORITY QUEUE -- #
+#     # 'tasks.tasks.generate_cards': {'queue': 'high'},
+#     # -- NORMAL PRIORITY QUEUE
+    'people.tasks.send_registration_confirmation': {'queue': 'normal'},
+#     # 'tasks.tasks.parse_file': {'queue': 'normal'},
+#     # 'tasks.tasks.clean_exercises': {'queue': 'normal'},
+#     # -- LOW PRIORITY QUEUE -- #
+#     # 'tasks.analytics.generate_raw_reports_data': {'queue': 'low'},
+#     # 'tasks.add_attributes_to_exercises': {'queue': 'low'},
+#     # 'tasks.change_card_status': {'queue': 'low'},
+}
+
+# Custom app settings
+PROJECT_EMAIL_TEMPLATE_NAME = 'Re:Minder'

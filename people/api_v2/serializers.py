@@ -14,6 +14,9 @@ class UserRegistrationSerializerV2(UserRegistrationSerializer):
     email = serializers.EmailField(min_length=8, max_length=50)
 
     def validate_email(self, value):
+        """
+        Check if user with this email already exists and email is correct
+         """
         errors = dict()
         try:
             validate_email(value)
@@ -21,6 +24,8 @@ class UserRegistrationSerializerV2(UserRegistrationSerializer):
             errors['email'] = list(e.messages)
         if errors:
             raise serializers.ValidationError(errors)
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("User with this email already exists.")
         return value
 
     def create(self, validated_data: dict):
