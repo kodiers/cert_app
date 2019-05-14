@@ -246,12 +246,12 @@ LOGGING = {
             'level': 'DEBUG',
         },
         'celery.task': {
-            'handlers': ['logfile'],
+            'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'celery': {
-            'handlers': ['logfile'],
+            'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
             'propagate': True,
         },
@@ -288,17 +288,17 @@ CELERY_DEFAULT_ROUTING_KEY = 'normal'
 
 CELERY_TIMEZONE = TIME_ZONE
 
-CELERY_ROUTES = {
-    # -- HIGH PRIORITY QUEUE -- #
-    # 'tasks.tasks.generate_cards': {'queue': 'high'},
-    # -- NORMAL PRIORITY QUEUE
+CELERY_TASK_ROUTES = {
+#     # -- HIGH PRIORITY QUEUE -- #
+#     # 'tasks.tasks.generate_cards': {'queue': 'high'},
+#     # -- NORMAL PRIORITY QUEUE
     'people.tasks.send_registration_confirmation': {'queue': 'normal'},
-    # 'tasks.tasks.parse_file': {'queue': 'normal'},
-    # 'tasks.tasks.clean_exercises': {'queue': 'normal'},
-    # -- LOW PRIORITY QUEUE -- #
-    # 'tasks.analytics.generate_raw_reports_data': {'queue': 'low'},
-    # 'tasks.add_attributes_to_exercises': {'queue': 'low'},
-    # 'tasks.change_card_status': {'queue': 'low'},
+#     # 'tasks.tasks.parse_file': {'queue': 'normal'},
+#     # 'tasks.tasks.clean_exercises': {'queue': 'normal'},
+#     # -- LOW PRIORITY QUEUE -- #
+#     # 'tasks.analytics.generate_raw_reports_data': {'queue': 'low'},
+#     # 'tasks.add_attributes_to_exercises': {'queue': 'low'},
+#     # 'tasks.change_card_status': {'queue': 'low'},
 }
 
 # Custom app settings
