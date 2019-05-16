@@ -5,7 +5,8 @@ from settings.local import (
     cors_list,
     celery_broker_url,
     celery_result_backend,
-    email_settings
+    email_settings,
+    frontend_password_reset_url
 )
 
 
@@ -36,3 +37,5 @@ EMAIL_USE_TLS = email_settings['email_use_tls']
 EMAIL_HOST = email_settings['email_host']
 EMAIL_PORT = email_settings['email_port']
 EMAIL_HOST_PASSWORD = email_settings['email_host_password']
+
+FRONTEND_PASSWORD_RESET_URL = frontend_password_reset_url

@@ -10,12 +10,22 @@ logger = get_task_logger(__name__)
 
 
 @task
-def send_registration_confirmation(username: str, email: str):
+def send_registration_confirmation(username: str, email: str) -> None:
     """
     Send registration confirmation email
     """
-    logger.info("Sending email to: {}".format(email))
-    email = Email({'username': username, 'email': email, 'app_name': settings.PROJECT_EMAIL_TEMPLATE_NAME},
-                  'email/registration_confirmation.html',
+    logger.info("Sending registration email to: {}".format(email))
+    email = Email({'username': username, 'email': email}, 'email/registration_confirmation.html',
                   'You was successfully registered in {}'.format(settings.PROJECT_EMAIL_TEMPLATE_NAME), [email])
+    email.send()
+
+
+@task
+def send_password_reset_email(username: str, email: str, reset_url: str) -> None:
+    """
+    Send password reset email
+    """
+    logger.info("Sending password reset email to: {}".format(email))
+    email = Email({'username': username, 'reset_url': reset_url}, 'email/password_reset.html', "Reset your password",
+                  [email])
     email.send()

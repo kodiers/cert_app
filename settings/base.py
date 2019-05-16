@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
+    'django_rest_passwordreset',
     'django_filters',
     'corsheaders',
     'common',
@@ -270,6 +271,9 @@ SWAGGER_SETTINGS = {
     "is_superuser": True
 }
 
+# django-rest-passwordreset settings
+DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME = 48
+
 # Celery settings
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -293,6 +297,7 @@ CELERY_TASK_ROUTES = {
 #     # 'tasks.tasks.generate_cards': {'queue': 'high'},
 #     # -- NORMAL PRIORITY QUEUE
     'people.tasks.send_registration_confirmation': {'queue': 'normal'},
+    'people.tasks.send_password_reset_email': {'queue': 'normal'}
 #     # 'tasks.tasks.parse_file': {'queue': 'normal'},
 #     # 'tasks.tasks.clean_exercises': {'queue': 'normal'},
 #     # -- LOW PRIORITY QUEUE -- #
