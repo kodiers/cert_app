@@ -9,6 +9,7 @@ coverage==4.5.3
 Django==2.2.1
 django-cors-headers==2.5.3
 django-filter==2.1.0
+django-rest-passwordreset==1.0.0
 django-rest-swagger==2.2.0
 djangorestframework==3.9.3
 djangorestframework-jwt==1.11.0
