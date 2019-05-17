@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
-    'django_rest_passwordreset',
     'django_filters',
     'corsheaders',
     'common',
@@ -270,9 +269,6 @@ SWAGGER_SETTINGS = {
     "is_authenticated": True,
     "is_superuser": True
 }
-
-# django-rest-passwordreset settings
-DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME = 48
 
 # Celery settings
 CELERY_ACCEPT_CONTENT = ['json']
