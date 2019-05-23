@@ -304,3 +304,4 @@ CELERY_TASK_ROUTES = {
 
 # Custom app settings
 PROJECT_EMAIL_TEMPLATE_NAME = 'Re:Minder'
+PASSWORD_RESET_TOKEN_EXPIRATION_PERIOD = 48  # Password reset token expiration period in hours

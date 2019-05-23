@@ -21,11 +21,12 @@ def send_registration_confirmation(username: str, email: str) -> None:
 
 
 @task
-def send_password_reset_email(username: str, email: str, reset_url: str) -> None:
+def send_password_reset_email(username: str, email: str, token: str) -> None:
     """
     Send password reset email
     """
     logger.info("Sending password reset email to: {}".format(email))
+    reset_url = f"{settings.FRONTEND_PASSWORD_RESET_URL}?token={token}"
     email = Email({'username': username, 'reset_url': reset_url}, 'email/password_reset.html', "Reset your password",
                   [email])
     email.send()
