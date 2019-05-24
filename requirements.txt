@@ -7,10 +7,10 @@ coreapi==2.3.3
 coreschema==0.0.4
 coverage==4.5.3
 Django==2.2.1
-django-cors-headers==2.5.3
+django-cors-headers==3.0.1
 django-filter==2.1.0
 django-rest-swagger==2.2.0
-djangorestframework==3.9.3
+djangorestframework==3.9.4
 djangorestframework-jwt==1.11.0
 idna==2.8
 itypes==1.1.0
@@ -24,10 +24,10 @@ Pillow==6.0.0
 PyJWT==1.7.1
 pytz==2019.1
 redis==3.2.1
-requests==2.21.0
+requests==2.22.0
 simplejson==3.16.0
 six==1.12.0
 sqlparse==0.3.0
 uritemplate==3.0.0
-urllib3==1.24.2
+urllib3==1.25.3
 vine==1.3.0

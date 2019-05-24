@@ -19,10 +19,10 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = (os.path.join(BASE_DIR, 'static'))
 
 CORS_ORIGIN_WHITELIST = (
-    'localhost:8000',
-    '127.0.0.1:8000',
-    'localhost:4200',
-    '127.0.0.1:4200',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://localhost:4200',
+    'http://127.0.0.1:4200',
 )
 
 TEST_RUNNER = "teamcity.django.TeamcityDjangoRunner"
