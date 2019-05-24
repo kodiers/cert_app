@@ -42,7 +42,7 @@ class RequestPasswordResetTokenAPIViewV2(CreateAPIView):
     permission_classes = (permissions.AllowAny,)
 
     def create(self, request: Request, *args: str, **kwargs: str) -> Response:
-        serializer = self.get_serializer(request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
         send_password_reset_email.delay(instance.user.username, instance.user.email, instance.token)

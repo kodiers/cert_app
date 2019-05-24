@@ -53,6 +53,9 @@ class PasswordResetToken(BaseModel):
     user = models.ForeignKey(User, related_name='reset_token', verbose_name=_('User'), on_delete=models.CASCADE)
     expire_at = models.DateTimeField(verbose_name='Token expires at')
 
+    def __str__(self) -> str:
+        return f"{self.user.username} expire at {self.expire_at.strftime('%d-%m-%Y')}"
+
     def _set_expiration_date(self):
         """
         Set password reset token expiration
@@ -67,14 +70,20 @@ class PasswordResetToken(BaseModel):
         now = timezone.now()
         return now > self.expire_at
 
-    @staticmethod
-    def create_password_reset_token(email: str) -> 'PasswordResetToken':
+    @classmethod
+    def create_password_reset_token(cls, email: str) -> 'PasswordResetToken':
         """
         Create password reset token for user with email
         """
         user = User.objects.get(email=email)
+        cls.objects.filter(user=user).delete()
         token_str = default_token_generator.make_token(user)
-        token_obj = PasswordResetToken(token=token_str, user=user)
+        token_obj = cls(token=token_str, user=user)
         token_obj._set_expiration_date()
         token_obj.save()
         return token_obj
+
+    class Meta:
+        verbose_name = _('Password reset token')
+        verbose_name_plural = _('Password reset tokens')
+        ordering = ('created',)
