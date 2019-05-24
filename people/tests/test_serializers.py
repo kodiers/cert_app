@@ -3,7 +3,7 @@ from django.test import TestCase
 from rest_framework.serializers import ValidationError
 
 from people.api.serializers import UserRegistrationSerializer, UserSerializer, ProfileSerializer
-from people.api_v2.serializers import UserRegistrationSerializerV2
+from people.api_v2.serializers import UserRegistrationSerializerV2, RequestPasswordResetSerializer
 
 from people.tests.recipes import user_recipe
 
@@ -118,11 +118,51 @@ class TestUserRegistrationSerializerV2(TestCase):
         self.assertRaises(ValidationError, self.serializer.validate_password, 'password')
 
     def test_validate_email_fail(self):
-        data = {'email': self.password}
         with self.assertRaisesMessage(ValidationError, "Enter a valid email address."):
-            self.serializer.validate_email(data)
+            self.serializer.validate_email(self.password)
 
     def test_create(self):
         data = {"username": self.username, "password": self.password, 'email': self.email}
         user = self.serializer.create(data)
         self.assertEqual(user.username, self.username)
+
+
+class TestRequestPasswordResetSerializer(TestCase):
+    """
+    Test RequestPasswordResetSerializer
+    """
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = user_recipe.make()
+        cls.serializer = RequestPasswordResetSerializer()
+
+    def setUp(self) -> None:
+        self.user.is_active = True
+        self.user.save()
+
+    def test_validate_email_valid(self):
+        self.assertEqual(self.serializer.validate_email(self.user.email), self.user.email)
+
+    def test_validate_email_not_valid(self):
+        with self.assertRaisesMessage(ValidationError, "Enter a valid email address."):
+            self.serializer.validate_email('test')
+
+    def test_validate_email_user_not_exists(self):
+        with self.assertRaisesMessage(ValidationError, "User with this email does not exists."):
+            self.serializer.validate_email('tester@testexample.com')
+
+    def test_validate_valid(self):
+        data = {'email': self.user.email}
+        self.assertEqual(self.serializer.validate(data), data)
+
+    def test_validate_user_not_active(self):
+        self.user.is_active = False
+        self.user.save()
+        data = {'email': self.user.email}
+        with self.assertRaisesMessage(ValidationError, "User with this email is not active."):
+            self.serializer.validate(data)
+
+    def test_create(self):
+        data = {'email': self.user.email}
+        token = self.serializer.create(data)
+        self.assertEqual(token.user, self.user)
