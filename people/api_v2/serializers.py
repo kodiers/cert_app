@@ -1,33 +1,17 @@
-from django.core import exceptions
-from django.core.validators import validate_email
 from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
 from people.models import PasswordResetToken
 from people.api.serializers import UserRegistrationSerializer
+from people.api_v2.validators import EmailValidator
 
 
 class UserRegistrationSerializerV2(UserRegistrationSerializer):
     """
     User registration serializer
     """
-    email = serializers.EmailField(min_length=8, max_length=50)
-
-    def validate_email(self, value: str) -> str:
-        """
-        Check if user with this email already exists and email is correct
-         """
-        errors = dict()
-        try:
-            validate_email(value)
-        except exceptions.ValidationError as e:
-            errors['email'] = list(e.messages)
-        if errors:
-            raise serializers.ValidationError(errors)
-        if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("User with this email already exists.")
-        return value
+    email = serializers.EmailField(min_length=8, max_length=50, validators=[EmailValidator(user_should_exists=False)])
 
     def create(self, validated_data: dict) -> User:
         """
@@ -44,22 +28,7 @@ class RequestPasswordResetSerializer(serializers.Serializer):
     """
     Request password reset token
     """
-    email = serializers.EmailField(min_length=8, max_length=50)
-
-    def validate_email(self, value: str) -> str:
-        """
-        Check if user with this email already exists and email is correct
-        """
-        errors = dict()
-        try:
-            validate_email(value)
-        except exceptions.ValidationError as e:
-            errors['email'] = list(e.messages)
-        if errors:
-            raise serializers.ValidationError(errors)
-        if not User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("User with this email does not exists.")
-        return value
+    email = serializers.EmailField(min_length=8, max_length=50, validators=[EmailValidator(user_should_exists=True)])
 
     def validate(self, attrs: dict) -> dict:
         email = attrs.get('email')

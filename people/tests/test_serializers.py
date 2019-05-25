@@ -117,10 +117,6 @@ class TestUserRegistrationSerializerV2(TestCase):
     def test_validate_password_simple(self):
         self.assertRaises(ValidationError, self.serializer.validate_password, 'password')
 
-    def test_validate_email_fail(self):
-        with self.assertRaisesMessage(ValidationError, "Enter a valid email address."):
-            self.serializer.validate_email(self.password)
-
     def test_create(self):
         data = {"username": self.username, "password": self.password, 'email': self.email}
         user = self.serializer.create(data)
@@ -139,17 +135,6 @@ class TestRequestPasswordResetSerializer(TestCase):
     def setUp(self) -> None:
         self.user.is_active = True
         self.user.save()
-
-    def test_validate_email_valid(self):
-        self.assertEqual(self.serializer.validate_email(self.user.email), self.user.email)
-
-    def test_validate_email_not_valid(self):
-        with self.assertRaisesMessage(ValidationError, "Enter a valid email address."):
-            self.serializer.validate_email('test')
-
-    def test_validate_email_user_not_exists(self):
-        with self.assertRaisesMessage(ValidationError, "User with this email does not exists."):
-            self.serializer.validate_email('tester@testexample.com')
 
     def test_validate_valid(self):
         data = {'email': self.user.email}
