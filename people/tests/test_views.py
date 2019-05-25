@@ -63,3 +63,20 @@ class TestUserRegistrationAPIViewV2(TestCase):
         self.assertTrue(response.data["user"]["username"], username)
         self.assertTrue(response.data["user"]["email"], email)
         self.assertIsNotNone(response.data["token"])
+
+
+class TestRequestPasswordResetTokenAPIViewV2(TestCase):
+    """
+    Test RequestPasswordResetTokenAPIViewV2
+    """
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = user_recipe.make()
+
+    def test_post(self):
+        data = {"email": self.user.email}
+        response = self.client.post(reverse('api:api_v2:people_api_v2:password_reset'), data,
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(response.data["result"], 'OK')
+        self.assertTrue(response.data["message"], 'Password reset email was sent.')
