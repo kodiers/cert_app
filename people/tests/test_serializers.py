@@ -28,17 +28,6 @@ class TestUserRegistrationSerializer(TestCase):
         with self.assertRaisesMessage(ValidationError, "Password and confirm password don't match"):
             self.serializer.validate(data)
 
-    def test_validate_password_success(self):
-        password = self.serializer.validate_password(self.password)
-        self.assertEqual(password, self.password)
-
-    def test_validate_password_empty(self):
-        with self.assertRaisesMessage(ValidationError, "Password are required"):
-            self.serializer.validate_password('')
-
-    def test_validate_password_simple(self):
-        self.assertRaises(ValidationError, self.serializer.validate_password, 'password')
-
     def test_create(self):
         data = {"username": self.username, "password": self.password}
         user = self.serializer.create(data)
@@ -105,17 +94,6 @@ class TestUserRegistrationSerializerV2(TestCase):
         data = {'password': self.password, 'confirm_password': 'password', 'email': self.email}
         with self.assertRaisesMessage(ValidationError, "Password and confirm password don't match"):
             self.serializer.validate(data)
-
-    def test_validate_password_success(self):
-        password = self.serializer.validate_password(self.password)
-        self.assertEqual(password, self.password)
-
-    def test_validate_password_empty(self):
-        with self.assertRaisesMessage(ValidationError, "Password are required"):
-            self.serializer.validate_password('')
-
-    def test_validate_password_simple(self):
-        self.assertRaises(ValidationError, self.serializer.validate_password, 'password')
 
     def test_create(self):
         data = {"username": self.username, "password": self.password, 'email': self.email}
