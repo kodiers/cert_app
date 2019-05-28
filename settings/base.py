@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import datetime
+
 from kombu import Queue, Exchange
+from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -293,13 +295,21 @@ CELERY_TASK_ROUTES = {
 #     # 'tasks.tasks.generate_cards': {'queue': 'high'},
 #     # -- NORMAL PRIORITY QUEUE
     'people.tasks.send_registration_confirmation': {'queue': 'normal'},
-    'people.tasks.send_password_reset_email': {'queue': 'normal'}
+    'people.tasks.send_password_reset_email': {'queue': 'normal'},
+    'people.tasks.send_password_reset_success': {'queue': 'normal'}
 #     # 'tasks.tasks.parse_file': {'queue': 'normal'},
 #     # 'tasks.tasks.clean_exercises': {'queue': 'normal'},
 #     # -- LOW PRIORITY QUEUE -- #
 #     # 'tasks.analytics.generate_raw_reports_data': {'queue': 'low'},
 #     # 'tasks.add_attributes_to_exercises': {'queue': 'low'},
 #     # 'tasks.change_card_status': {'queue': 'low'},
+}
+
+CELERYBEAT_SCHEDULE = {
+    'people-tasks-clear_password_reset_tokens': {
+        'task': 'people.tasks.clear_password_reset_tokens',
+        'schedule': crontab(minute='01', hour='23', day_of_week='sun')
+    }
 }
 
 # Custom app settings
