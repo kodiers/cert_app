@@ -293,22 +293,23 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_ROUTES = {
 #     # -- HIGH PRIORITY QUEUE -- #
 #     # 'tasks.tasks.generate_cards': {'queue': 'high'},
-#     # -- NORMAL PRIORITY QUEUE
+    # -- NORMAL PRIORITY QUEUE
     'people.tasks.send_registration_confirmation': {'queue': 'normal'},
     'people.tasks.send_password_reset_email': {'queue': 'normal'},
-    'people.tasks.send_password_reset_success': {'queue': 'normal'}
+    'people.tasks.send_password_reset_success': {'queue': 'normal'},
 #     # 'tasks.tasks.parse_file': {'queue': 'normal'},
 #     # 'tasks.tasks.clean_exercises': {'queue': 'normal'},
-#     # -- LOW PRIORITY QUEUE -- #
+    # -- LOW PRIORITY QUEUE -- #
+    'people.tasks.clear_password_reset_tokens': {'queue': 'low'}
 #     # 'tasks.analytics.generate_raw_reports_data': {'queue': 'low'},
 #     # 'tasks.add_attributes_to_exercises': {'queue': 'low'},
 #     # 'tasks.change_card_status': {'queue': 'low'},
 }
 
-CELERYBEAT_SCHEDULE = {
+CELERY_BEAT_SCHEDULE = {
     'people-tasks-clear_password_reset_tokens': {
         'task': 'people.tasks.clear_password_reset_tokens',
-        'schedule': crontab(minute='01', hour='23', day_of_week='sun')
+        'schedule': crontab(minute='01', hour='23', day_of_week='0')
     }
 }
 
