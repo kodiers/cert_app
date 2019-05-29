@@ -1,9 +1,17 @@
+from datetime import timedelta
+
 from django.test import TestCase
+from django.utils import timezone
 
 from rest_framework.serializers import ValidationError
 
+from people.models import PasswordResetToken
 from people.api.serializers import UserRegistrationSerializer, UserSerializer, ProfileSerializer
-from people.api_v2.serializers import UserRegistrationSerializerV2, RequestPasswordResetSerializer
+from people.api_v2.serializers import (
+    UserRegistrationSerializerV2,
+    RequestPasswordResetSerializer,
+    ResetPasswordSerializer
+)
 
 from people.tests.recipes import user_recipe
 
@@ -129,3 +137,54 @@ class TestRequestPasswordResetSerializer(TestCase):
         data = {'email': self.user.email}
         token = self.serializer.create(data)
         self.assertEqual(token.user, self.user)
+
+
+class TestResetPasswordSerializer(TestCase):
+    """
+    Test ResetPasswordSerializer
+    """
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = user_recipe.make()
+        cls.token = PasswordResetToken.create_password_reset_token(cls.user.email)
+        cls.serializer = ResetPasswordSerializer()
+
+    def setUp(self) -> None:
+        self.token.expire_at = timezone.now() + timedelta(days=2)
+        self.token.save()
+        self.user.is_active = True
+        self.user.save()
+
+    def test_validate_token_valid(self):
+        self.assertEqual(self.token.token, self.serializer.validate_token(self.token.token))
+
+    def test_validate_token_expired(self):
+        self.token.expire_at = timezone.now() - timedelta(days=2)
+        self.token.save()
+        with self.assertRaisesMessage(ValidationError, "Token is expired."):
+            self.serializer.validate_token(self.token.token)
+
+    def test_validate_token_invalid(self):
+        with self.assertRaisesMessage(ValidationError, "Token incorrect."):
+            self.serializer.validate_token('some-test-token')
+
+    def test_validate_valid(self):
+        data = {'token': self.token.token, 'password': 'p@ssw0rdP@ssw0rd', 'confirm_password': 'p@ssw0rdP@ssw0rd'}
+        self.assertEqual(data, self.serializer.validate(data))
+
+    def test_validate_passwords_not_match(self):
+        data = {'token': self.token.token, 'password': 'p@ssw0rdP@ssw0rd1', 'confirm_password': 'p@ssw0rdP@ssw0rd'}
+        with self.assertRaisesMessage(ValidationError, "Password and confirm password doesn't match."):
+            self.serializer.validate(data)
+
+    def test_validate_user_not_exists(self):
+        data = {'token': 'some-test-token', 'password': 'p@ssw0rdP@ssw0rd', 'confirm_password': 'p@ssw0rdP@ssw0rd'}
+        with self.assertRaisesMessage(ValidationError, "User with this token not found."):
+            self.serializer.validate(data)
+
+    def test_validate_user_not_active(self):
+        self.user.is_active = False
+        self.user.save()
+        data = {'token': self.token.token, 'password': 'p@ssw0rdP@ssw0rd', 'confirm_password': 'p@ssw0rdP@ssw0rd'}
+        with self.assertRaisesMessage(ValidationError, "User is not active."):
+            self.serializer.validate(data)

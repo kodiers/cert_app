@@ -68,11 +68,11 @@ class ResetPasswordSerializer(serializers.Serializer):
         confirm_password = attrs.get('confirm_password')
         token = attrs.get('token')
         if password != confirm_password:
-            raise serializers.ValidationError(_("Password and confirm password don't match"))
+            raise serializers.ValidationError("Password and confirm password doesn't match.")
         try:
             user = User.objects.get(reset_token__token=token)
         except User.DoesNotExist:
-            raise serializers.ValidationError("Token incorrect.")
+            raise serializers.ValidationError("User with this token not found.")
         if not user.is_active:
             raise serializers.ValidationError("User is not active.")
         return attrs

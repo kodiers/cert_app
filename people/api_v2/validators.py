@@ -43,4 +43,3 @@ class PasswordValidator:
             errors['password'] = list(e.messages)
         if errors:
             raise serializers.ValidationError(errors)
-        return value
