@@ -66,4 +66,4 @@ class ResetPasswordAPIViewV2(GenericAPIView):
         user.set_password(serializer.validated_data['password'])
         user.save()
         send_password_reset_success.delay(user.username, user.email)
-        return Response({'result': 'Ok', 'message': 'Your password was reseted.'}, status=status.HTTP_200_OK)
+        return Response({'result': 'Ok', 'message': 'Your password was reset.'}, status=status.HTTP_200_OK)
