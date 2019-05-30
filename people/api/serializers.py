@@ -1,6 +1,4 @@
-from django.core import exceptions
 from django.contrib.auth.models import User
-from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import serializers
@@ -8,6 +6,7 @@ from rest_framework.authtoken.models import Token
 
 from common.serializers import IdFieldMixin
 from people.models import Profile
+from people.api_v2.validators import PasswordValidator
 
 
 class UserRegistrationSerializer(serializers.Serializer):
@@ -15,7 +14,7 @@ class UserRegistrationSerializer(serializers.Serializer):
     User registration serializer
     """
     username = serializers.CharField()
-    password = serializers.CharField(min_length=8, max_length=50)
+    password = serializers.CharField(min_length=8, max_length=50, validators=[PasswordValidator()])
     confirm_password = serializers.CharField(min_length=8, max_length=50)
 
     def validate(self, attrs):
@@ -28,21 +27,6 @@ class UserRegistrationSerializer(serializers.Serializer):
         if password != confirm_password:
             raise serializers.ValidationError(_("Password and confirm password don't match"))
         return validated_data
-
-    def validate_password(self, value):
-        """
-        Check if password match validation rules
-        """
-        if not value:
-            raise serializers.ValidationError("Password are required")
-        errors = dict()
-        try:
-            validate_password(password=value)
-        except exceptions.ValidationError as e:
-            errors['password'] = list(e.messages)
-        if errors:
-            raise serializers.ValidationError(errors)
-        return value
 
     def validate_username(self, value: str):
         """

@@ -21,3 +21,5 @@ email_settings = {
     'email_port': None,
     'email_host_password': None
 }
+
+frontend_password_reset_url = ''
