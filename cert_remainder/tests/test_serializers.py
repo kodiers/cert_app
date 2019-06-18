@@ -43,7 +43,7 @@ class TestUserCertificationSerializer(TestCase):
         user_certification.refresh_from_db()
         self.assertEqual(user_certification.user, self.user)
         self.assertEqual(user_certification.certification, new_certification)
-        self.assertEqual(user_certification.expiration_date, now_plus_hour.date())
+        self.assertEqual(user_certification.expiration_date, timezone.localtime(now_plus_hour).date())
 
 
 class TestUserExamSerializer(TestCase):
