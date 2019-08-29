@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
+from rest_framework_jwt.views import jwt_response_payload_handler
+
 from common.serializers import IdFieldMixin
 from people.models import Profile
 from people.api_v2.validators import PasswordValidator
@@ -63,8 +65,10 @@ class ProfileSerializer(serializers.ModelSerializer, IdFieldMixin):
     token = serializers.SerializerMethodField()
 
     def get_token(self, obj):
+        request = self.context['request']
         token = Token.objects.get(user=obj.user)
-        return token.key
+        jwt = jwt_response_payload_handler(token, obj.user, request)
+        return jwt
 
     class Meta:
         model = Profile
