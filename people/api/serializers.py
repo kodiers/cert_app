@@ -2,7 +2,8 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import serializers
-from rest_framework.authtoken.models import Token
+
+from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 
 from common.serializers import IdFieldMixin
 from people.models import Profile
@@ -63,8 +64,9 @@ class ProfileSerializer(serializers.ModelSerializer, IdFieldMixin):
     token = serializers.SerializerMethodField()
 
     def get_token(self, obj):
-        token = Token.objects.get(user=obj.user)
-        return token.key
+        payload = jwt_payload_handler(obj.user)
+        jwt = jwt_encode_handler(payload)
+        return jwt
 
     class Meta:
         model = Profile
