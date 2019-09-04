@@ -28,7 +28,7 @@ def send_password_reset_email(username: str, email: str, token: str) -> None:
     Send password reset email
     """
     logger.info("Sending password reset email to: {}".format(email))
-    reset_url = f"{settings.FRONTEND_PASSWORD_RESET_URL}?token={token}"
+    reset_url = f"{settings.FRONTEND_PASSWORD_RESET_URL}/{token}"
     email = Email({'username': username, 'reset_url': reset_url}, 'email/password_reset.html', "Reset your password",
                   [email])
     email.send()
