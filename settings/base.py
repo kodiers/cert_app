@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'certifications.api',
     'cert_remainder',
     'cert_remainder.api',
+    'parsers',
     'django.contrib.admin',
 ]
 
