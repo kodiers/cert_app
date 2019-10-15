@@ -23,3 +23,5 @@ email_settings = {
 }
 
 frontend_password_reset_url = ''
+
+chrome_driver_path = ''

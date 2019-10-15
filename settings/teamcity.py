@@ -37,3 +37,5 @@ EMAIL_HOST_USER = 'test@test.ru'
 FAIL_EMAIL_SILENTLY = False
 
 FRONTEND_PASSWORD_RESET_URL = 'http://localhost/reset-password'
+
+CHROME_WEBDRIVER_PATH = 'chrome_driver_path'

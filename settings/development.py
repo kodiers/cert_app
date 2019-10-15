@@ -4,7 +4,8 @@ from settings.local import (
     celery_broker_url,
     celery_result_backend,
     email_settings,
-    frontend_password_reset_url
+    frontend_password_reset_url,
+    chrome_driver_path
 )
 
 
@@ -42,3 +43,5 @@ EMAIL_PORT = email_settings['email_port']
 EMAIL_HOST_PASSWORD = email_settings['email_host_password']
 
 FRONTEND_PASSWORD_RESET_URL = frontend_password_reset_url
+
+CHROME_WEBDRIVER_PATH = chrome_driver_path

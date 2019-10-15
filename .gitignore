@@ -149,3 +149,6 @@ media/*
 # celery staff
 celerybeat-schedule.db
 celerybeat.pid
+
+# binary staff
+bin/
