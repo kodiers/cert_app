@@ -6,7 +6,7 @@ from .models import ParserConfig
 
 
 class ParserConfigAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'url')
+    list_display = ('__str__', 'main_url')
     search_fields = ('vendor__title', 'url', 'parser_class_id')
 
 
