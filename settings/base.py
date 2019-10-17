@@ -248,6 +248,10 @@ LOGGING = {
             'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
         },
+        'parsers': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+        },
         'celery.task': {
             'handlers': ['console', 'logfile'],
             'level': 'DEBUG',
