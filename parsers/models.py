@@ -17,8 +17,17 @@ class ParserConfig(BaseModel):
     base_url = models.URLField(verbose_name=_('Base url'), blank=True,
                                help_text='The url, which be added to certification paths.')
     parser_class_id = models.CharField(verbose_name='Parser ID', max_length=30, unique=True)
-    certification_title_css_class = models.CharField(max_length=100, blank=True, default='',
-                                                     verbose_name=_('Certification title css class'))
+    certifications_link_css_selector = models.CharField(max_length=255, blank=True, default='',
+                                                        verbose_name=_('Certifications link css selector'),
+                                                        help_text=_('Selector to parse all links from main_url'))
+    certification_title_css_selector = models.CharField(max_length=255, blank=True, default='',
+                                                        verbose_name=_('Certification title css selector'))
+    certification_description_css_selector = models.CharField(max_length=255, blank=True, default='',
+                                                              verbose_name=_('Certification description css selector'))
+    exam_title_css_selector = models.CharField(max_length=255, blank=True, default='',
+                                               verbose_name=_('Exam title css selector'))
+    exam_description_css_selector = models.CharField(max_length=255, blank=True, default='',
+                                                     verbose_name=_('Exam description css selector'))
 
     def __str__(self):
         return f'{self.vendor.title} - {self.parser_class_id}'
