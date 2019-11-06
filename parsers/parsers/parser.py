@@ -38,8 +38,8 @@ class MicrosoftParser(BaseParser):
         """
         Get unique certification links from main_url and check if certification page exists.
         """
-        data = self.client.get(self.configuration.main_url, self.configuration.certifications_link_css_selector)
-        data = data if data else ''
+        raw_data = self.client.get(self.configuration.main_url, self.configuration.certifications_link_css_selector)
+        data = raw_data if raw_data else ''
         parser = self.parser_class(data, self.parser_markup)
         elements = parser.select(self.configuration.certifications_link_css_selector)
         links = set()
